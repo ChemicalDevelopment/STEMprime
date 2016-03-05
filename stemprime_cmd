@@ -1,0 +1,17 @@
+#Init vars used
+RED='\033[1;31m'
+L_CY='\033[1;36m'
+L_PR='\033[1;35m'
+YEL='\033[1;33m'
+GRN='\033[0;32m'
+NC='\033[0m' # No Color
+printf "\n"
+
+printf  "${L_PR}|             ${RED}STEMprime  ${YEL}~  ${RED}Cade Brown            ${L_PR}|\n"
+printf "${L_CY}"
+STARTTIME=$(date +%s)
+~/Documents/builds/STEMprime.out $1
+ENDTIME=$(date +%s)
+printf "                       ${YEL}$(($ENDTIME - $STARTTIME))${NC}${RED}s                       \n${NC}"
+
+printf "\n"
