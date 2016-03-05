@@ -16,7 +16,6 @@ Then use `~/Documents/builds/STEMprime.out <exp>` to run!
 #Easier use
 My bash file I use as quick command "stemprime <x>" from terminal is:
 `
-\#Init vars used
 RED='\033[1;31m'
 L_CY='\033[1;36m'
 L_PR='\033[1;35m'
