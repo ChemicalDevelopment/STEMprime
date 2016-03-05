@@ -16,13 +16,13 @@ Then use `~/Documents/builds/STEMprime.out <exp>` to run!
 #Easier use
 My bash file I use as quick command "stemprime <x>" from terminal is:
 `
-#Init vars used
+\#Init vars used
 RED='\033[1;31m'
 L_CY='\033[1;36m'
 L_PR='\033[1;35m'
 YEL='\033[1;33m'
 GRN='\033[0;32m'
-NC='\033[0m' # No Color
+NC='\033[0m'
 printf "\n"
 
 printf  "${L_PR}|             ${RED}STEMprime  ${YEL}~  ${RED}Cade Brown            ${L_PR}|\n"
