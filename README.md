@@ -14,4 +14,4 @@ echo "done"`
 Then use `~/Documents/builds/STEMprime.out <exp>` to run!
 
 #Easier use
-My bash file I use as quick command "stemprime <x>" from terminal is located as "stemprime" under this repository (no file format specified.) Put that in your PATH dir and you can now type in "stemprime 44497" and it colorizes output.
+My bash file I use as quick command "stemprime <x>" from terminal is located as "stemprime_cmd" under this repository (no file format specified.) Put that in your PATH dir and you can now type in "stemprime 44497" and it colorizes output.
