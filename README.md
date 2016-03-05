@@ -14,23 +14,4 @@ echo "done"`
 Then use `~/Documents/builds/STEMprime.out <exp>` to run!
 
 #Easier use
-My bash file I use as quick command "stemprime <x>" from terminal is:
-`
-RED='\033[1;31m'
-L_CY='\033[1;36m'
-L_PR='\033[1;35m'
-YEL='\033[1;33m'
-GRN='\033[0;32m'
-NC='\033[0m'
-printf "\n"
-
-printf  "${L_PR}|             ${RED}STEMprime  ${YEL}~  ${RED}Cade Brown            ${L_PR}|\n"
-printf "${L_CY}"
-STARTTIME=$(date +%s)
-~/Documents/builds/STEMprime.out $1
-ENDTIME=$(date +%s)
-printf "                       ${YEL}$(($ENDTIME - $STARTTIME))${NC}${RED}s                       \n${NC}"
-
-printf "\n"
-`
-This colorizes output, and locate this as "stemprime" in your ~/bin/ folder (or wherever PATH references) for a quick cmd.
+My bash file I use as quick command "stemprime <x>" from terminal is located as "stemprime" under this repository (no file format specified.) Put that in your PATH dir and you can now type in "stemprime 44497" and it colorizes output.
