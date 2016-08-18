@@ -3,17 +3,9 @@
 #include <stdlib.h>
 #include <malloc.h>
 #include <stdint.h>
+#include "array_management.h"
 
-int INT_BITS;
 
-unsigned int *primearray;
+void set_prime_array(unsigned int max, unsigned int ** prime_array);
 
-void set_index_true(long idx, int *bitarray);
-void set_index_false(long idx, int *bitarray);
-
-unsigned int get_index(long idx, int *bitarray);
-
-void set_bitarray(long max);
-
-unsigned int * prime_array();
 #endif

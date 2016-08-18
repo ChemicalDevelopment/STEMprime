@@ -1,7 +1,6 @@
 #include <malloc.h>
 #include <stdint.h>
-#include "primes.h"
-#include <stdio.h>
+#include "array_management.h"
 /*
 
 This int array stores whether 2[bit] + 1 is prime.
@@ -11,52 +10,31 @@ It uses the native arcitecture of the computer size.
 
 */
 
-int INT_BITS = 8 * sizeof(unsigned int);
-
-unsigned int *primearray;
-
-void set_index_true(long idx, int *bitarray) {
-    bitarray[idx / INT_BITS] |= (1 << (idx % INT_BITS));
-}
-
-void set_index_false(long idx, int *bitarray) {
-    bitarray[idx / INT_BITS] &= ~(1 << (idx % INT_BITS));
-}
-
-unsigned int get_index(long idx, int *bitarray) {
-    return bitarray[idx / INT_BITS] >> (idx % INT_BITS) & 1;
-}
-
-void set_bitarray(long max) {
-    free(primearray);
-    unsigned int *temparray = (unsigned int *)malloc(max / INT_BITS + 20);
+void set_prime_array(unsigned int max, unsigned int ** prime_array) {
+    unsigned int *temp_array = (unsigned int *)malloc(sizeof(unsigned int) * max + 1);
     long i, j;
-    for (i = 0; i <= max; ++i) {
-        set_index_true(i, temparray);
+    for (i = 0; i < max; ++i) {
+        set_index_true(i, temp_array);
     }
-    set_index_false(0, temparray);
-    set_index_false(1, temparray);
+
+    set_index_false(0, temp_array);
+    set_index_false(1, temp_array);
     for (i = 2; i <= max; ++i) {
-        if (get_index(i, temparray)) {
+        if (get_index(i, temp_array)) {
             for (j = 2 * i; j <= max; j += i) {
-                set_index_false(j, temparray);
+                set_index_false(j, temp_array);
             }
         }
     }
-    set_index_false(2, temparray);
-    primearray = (unsigned int *)malloc(max / (2 * INT_BITS) + 2);
+    set_index_false(2, temp_array);
+    *prime_array = (unsigned int *)malloc(sizeof(unsigned int) * max + 1);
     j = 1;
     for (i = 3; i <= max; i += 2) {
-        if (get_index(i, temparray)) {
-            set_index_true(j, primearray);
+        if (get_index(i, temp_array)) {
+            set_index_true(j, *prime_array);
         }
         ++j;
     }
-    free(temparray);
+    free(temp_array);
 }
-
-unsigned int * prime_array() {
-    return primearray;
-}
-
 
