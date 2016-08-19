@@ -13,6 +13,7 @@ It uses the native arcitecture of the computer size.
 void set_prime_array(unsigned int max, unsigned int ** prime_array) {
     unsigned int *temp_array = (unsigned int *)malloc(sizeof(unsigned int) * max + 1);
     long i, j;
+    long k = 1;
     for (i = 0; i < max; ++i) {
         set_index_true(i, temp_array);
     }

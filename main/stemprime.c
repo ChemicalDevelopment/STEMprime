@@ -2,6 +2,12 @@
 #include <gmp.h>
 #include <stdlib.h>
 
+/*
+© ChemicalDevelopment
+
+
+*/
+
 int main(int argcount, char *argv[])
 {
     int exponent;

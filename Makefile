@@ -1,11 +1,13 @@
-MAIN_SOURCES = ./stemprime_main/stemprime.c
+MAIN_SOURCES = ./main/stemprime.c
 
-FACTOR_SOURCES = ./stemprime_factor/main.c ./stemprime_factor/primes.c ./stemprime_factor/mersenne_factor.c ./stemprime_factor/array_management.c ./stemprime_factor/primes.h ./stemprime_factor/mersenne_factor.h ./stemprime_factor/array_management.h   
+FACTOR_SOURCES = ./factor/main.c ./factor/primes.c ./factor/factor.c ./factor/array_management.c ./factor/primes.h ./factor/factor.h ./factor/array_management.h   
 
 LIB = -lm -lgmp
 
-all: main factor
+all: main_o factor_o
 
-main: $(MAIN_SOURCES); gcc $(MAIN_SOURCES) $(LIB) -o ./out/STEMprime.o
+main_o: ; gcc $(MAIN_SOURCES) $(LIB) -o ./out/main.o
 
-factor: $(FACTOR_SOURCES); gcc $(FACTOR_SOURCES) $(LIB) -o ./out/STEMprime_factor.o
+factor_o: ; gcc $(FACTOR_SOURCES) $(LIB) -o ./out/factor.o
+
+clean: ; rm ./out/main.o ./out/factor.o

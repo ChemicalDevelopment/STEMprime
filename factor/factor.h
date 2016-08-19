@@ -10,6 +10,6 @@
 
 //void set_product_array(unsigned int * primes, long long max_product);
 
-unsigned int test_num(mpz_t prime_cand, unsigned int * primes);
+int test_num(mpz_t prime_cand, unsigned int * primes);
 
 #endif
