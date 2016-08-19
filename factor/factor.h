@@ -4,12 +4,10 @@
 #include <stdint.h>
 #include <gmp.h>
 
-#include "array_management.h"
-
 //unsigned int * product_array;
 
 //void set_product_array(unsigned int * primes, long long max_product);
 
-int test_num(mpz_t prime_cand, unsigned int * primes);
+int test_num(mpz_t prime_cand, int64_t *to_div);
 
 #endif

@@ -1,6 +1,6 @@
 MAIN_SOURCES = ./main/stemprime.c
 
-FACTOR_SOURCES = ./factor/main.c ./factor/primes.c ./factor/factor.c ./factor/array_management.c ./factor/primes.h ./factor/factor.h ./factor/array_management.h   
+FACTOR_SOURCES = ./factor/main.c ./factor/factor.c ./factor/factor.h   
 
 LIB = -lm -lgmp
 

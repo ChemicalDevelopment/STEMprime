@@ -3,29 +3,24 @@
 #include <stdint.h>
 #include <gmp.h>
 
-#include "array_management.h"
-
 //Test 2^exponent-1
-int test_num(mpz_t prime_cand, unsigned int * primes) {
-    unsigned int j, k = 0, rem = 0;
+int test_num(mpz_t prime_cand, int64_t *to_div) {
+    int64_t j, k = 0;
     mpz_t cur;
     mpz_init(cur);
     mpz_set(cur, prime_cand);
-    for(j = 0; j < sizeof(primes) * 8; ++j) {
-        if (get_index(j, primes)) {
-            rem = 0;
-            while (rem == 0) {
-                rem = mpz_tdiv_ui(cur, 2 * j + 1);
-                if (rem == 0) {
-                    mpz_divexact_ui(cur, cur, 2 * j + 1);
-                    printf("%d*", 2 * j + 1);
-                    ++k;
-                }
+    for(j = 2; j < sizeof(to_div) * 8; ++j) {
+        if ((to_div[j / 64] >> (j % 64)) & 1 == 1) {
+            while (mpz_tdiv_ui(cur, (long long)j) == 0) {
+                mpz_divexact_ui(cur, cur, (long long)j);
+                printf("%lld*", (long long)j);
+                ++k;
             }
         }
     }
-    //gmp_printf("%Zd\n", cur);
-    //printf("\n");
+    if (mpz_sizeinbase(cur, 10) < 80) {
+        gmp_printf("%Zd", cur);
+    }
     mpz_clear(cur);
     return k;
 }

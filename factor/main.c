@@ -1,7 +1,7 @@
-#include "primes.h"
 #include "factor.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdint.h>
 #include <gmp.h>
 
 /*
@@ -12,29 +12,26 @@ Project: github.chemicaldevelopment/stemprime
 */
 
 int main(int argc, char *argv[]) {
-    long long max = 1000000;
-    if (argc > 1) {
-        max = strtoll(argv[1], NULL, 10);
-    }
-    unsigned int * primes;
-    set_prime_array(max, &primes);
-    printf("Finished prime array\n");
-    unsigned int i, j;
-    mpz_t n;
-    mpz_init(n);
-    for (i = (10000000)/2; i < (10000000 + 1000000)/2; ++i) {
-        if (get_index(i, primes)) {
-            mpz_ui_pow_ui(n, 2, 2 * i + 1);
-            mpz_sub_ui(n, n, 1);
-            printf("2^%d-1 factors: ", 2 * i + 1);
-            j = test_num(n, primes);
-            if (j == 0) {
-                printf("\r");
-            } else {
-                printf("\n");
-            }
+    int64_t max = 1000000;
+    int64_t start_exp = 10000;
+    int64_t end_exp = 11000;
+    if (argc > 1) start_exp = strtoll(argv[1], NULL, 10);
+    if (argc > 2) end_exp = strtoll(argv[2], NULL, 10);
+    if (argc > 3) max = strtoll(argv[3], NULL, 10);
+    int64_t * to_div = (int64_t *)malloc(sizeof(int64_t) * (max / 64) + 1);
+    int64_t i;
+    for (i = 3; i < max; ++i) {
+        if (i % 2 == 1) {
+            to_div[i / 64] |= 1 << (i % 64);
         }
     }
-    printf("\n");
+    mpz_t n;
+    mpz_init(n);
+    for (i = 2; i < max; ++i) {
+        mpz_set_ui(n, i);
+        printf("%lld : ", (long long) i);
+        test_num(n, to_div);
+        printf("\n");
+    }
 }
 
