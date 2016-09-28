@@ -14,6 +14,7 @@ int test_num(mpz_t prime_cand, int64_t *to_div) {
             while (mpz_tdiv_ui(cur, (long long)j) == 0) {
                 mpz_divexact_ui(cur, cur, (long long)j);
                 printf("%lld*", (long long)j);
+                fflush(stdout);
                 ++k;
             }
         }

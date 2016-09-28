@@ -11,6 +11,8 @@ Project: github.chemicaldevelopment/stemprime
 
 */
 
+//Run with ./main.o $min $max $sieve
+//This tests between min and max
 int main(int argc, char *argv[]) {
     int64_t min = 10000;
     int64_t max = 12000;
@@ -29,8 +31,8 @@ int main(int argc, char *argv[]) {
             to_div[i / 64] |= 1 << (i % 64);
         }
     }
-    for (i = 32; i < max; ++i) {
-        if (to_div[i / 64] >> (i % 64) & 1 == 1) {
+    for (i = min; i < max; ++i) {
+        if (to_div[i >> 6] >> (i % 64) & 1 == 1) {
             mpz_ui_pow_ui(n, 2, i);
             mpz_sub_ui(n, n, 1);
             printf("M_%lld : ", (long long) i);
