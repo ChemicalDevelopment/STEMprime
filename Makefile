@@ -1,13 +1,15 @@
-MAIN_SOURCES = ./main/stemprime.c
-
-FACTOR_SOURCES = ./factor/main.c ./factor/factor.c ./factor/factor.h   
+MAIN_SOURCES = ./stemprime.c
 
 LIB = -lm -lgmp
 
-all: main_o factor_o
+all: main test
 
-main_o: ; gcc $(MAIN_SOURCES) $(LIB) -o ./out/main.o
+main: $(MAIN_SOURCES)
+	gcc $(MAIN_SOURCES) $(LIB) -o ./stemprime.o
 
-factor_o: ; gcc $(FACTOR_SOURCES) $(LIB) -o ./out/factor.o
+test: 
+	./stemprime.o 44497
 
-clean: ; rm ./out/main.o ./out/factor.o
+
+clean: 
+	rm ./stemprime.o
