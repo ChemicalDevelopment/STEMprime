@@ -2,7 +2,10 @@
 #include <stdio.h>
 #include <math.h>
 
+#include "bstypes.h"
+
 #include "output/string_out.h"
+
 #include "sieves/eratosthenes.h"
 #include "sieves/bitlib.h"
 
@@ -13,7 +16,8 @@
 int main(int argc, char *argv[]) {
 	printf("QS v%s\n", QS_VERSION);
 	long int max = 1000;
-	char *set;
+	bitset_t set;
+	//char *set;
 	bitset_erat(&set, max);
 	printf("%ld\n", count(set, max));
 

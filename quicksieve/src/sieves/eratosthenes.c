@@ -7,9 +7,10 @@
 #include <string.h>
 #include <math.h>
 
-void __bitset_D(char *list, long int max) {
+
+void __bitset_erat_C(bitset_t list, long int max) {
 	long int i, j;
-	memset(list, 0b10101010, SIZE_BS(max));
+	memset(list.data, 0b10101010, SIZE_BS(max));
 	setbit_0(list, 0);
 	setbit_0(list, 1);
 	setbit_1(list, 2);
@@ -23,7 +24,7 @@ void __bitset_D(char *list, long int max) {
 	}
 }
 
-void bitset_erat(char **list, long int max) {
-	*list = MALLOC_BS(max);
-	__bitset_D(*list, max);
+void bitset_erat(bitset_t *bs, long int max) {
+	(*bs).data = MALLOC_BS(max);
+	__bitset_erat_C((*bs), max);
 }

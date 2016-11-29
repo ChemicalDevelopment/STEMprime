@@ -1,7 +1,7 @@
 STEMPRIME_SOURCES = stemprime/src/main.c
 STEMPRIME_OUT = stemprime.o
 
-QS_SOURCES = qs/src/*.c qs/src/output/*.c qs/src/sieves/*.c
+QS_SOURCES = quicksieve/src/*.c quicksieve/src/output/*.c quicksieve/src/sieves/*.c
 QS_OUT = qs.o
 
 LIB = -lm -lgmp
