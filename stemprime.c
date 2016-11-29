@@ -10,23 +10,46 @@
 
 */
 
+void mod_2nm1(mpz_t ret, int32_t exponent, mpz_t nm1, mpz_t tmp) {
+	mpz_tdiv_q_2exp(tmp, ret, exponent);
+	mpz_mod_2exp(ret, ret, exponent);
+	mpz_add(ret, ret, tmp);
+	
+	
+	if (mpz_cmp(ret, nm1) >= 0) {
+		mpz_sub(ret, ret, nm1);
+	}
+
+	if (mpz_cmp(ret, nm1) >= 0) {
+		mpz_mod(ret, ret, nm1);
+	}
+
+	//gmp_printf("%Zd\n%Zd\n", ret, nm1);
+	
+	/*
+	if (mpz_cmp(ret, nm1) > 0) {
+	}*/
+}
+
 bool LL(int32_t exponent) {
-	mpz_t MOD, LN;
+	mpz_t MOD, LN, tmp;
 
 	mpz_init2(MOD, exponent+1);
+	mpz_init2(LN, exponent+1);
+	mpz_init2(tmp, exponent+1);
+	
 	mpz_ui_pow_ui(MOD, 2, exponent);
 	mpz_sub_ui(MOD, MOD, 1); 
 
-
-	mpz_init2(LN, 2*exponent+1);
 	mpz_set_ui(LN, 4);
 
 	int32_t i;
 	for (i = 0; i < exponent - 2; i++) {
 		mpz_mul(LN, LN, LN);
 		mpz_sub_ui(LN, LN, 2);
-		mpz_tdiv_r(LN, LN, MOD);
-		if (i % (exponent/100) == 0 || i == exponent - 3) {
+		mod_2nm1(LN, exponent, MOD, tmp);
+		
+		if (exponent/100 == 0 || i % (exponent/100) == 0 || i == exponent - 3) {
 			printf("%%%f\r", (100.*i) / (exponent-3));
 			fflush(stdout);
 		}
@@ -37,7 +60,7 @@ bool LL(int32_t exponent) {
 
 int main(int argcount, char *argv[])
 {
-	int32_t exponent = 1398269;
+	int32_t exponent = 2*2*44497;
 	bool res;
 	clock_t s, e;
 	s = clock();
@@ -47,6 +70,6 @@ int main(int argcount, char *argv[])
 		printf("2^%d-1 is prime\n", exponent);
 	}
 	printf("took %lf seconds\n", (double)(e-s)/1000000);
-	
+	return 0;
 }
 
