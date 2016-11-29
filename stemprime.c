@@ -23,12 +23,6 @@ void mod_2nm1(mpz_t ret, int32_t exponent, mpz_t nm1, mpz_t tmp) {
 	if (mpz_cmp(ret, nm1) >= 0) {
 		mpz_mod(ret, ret, nm1);
 	}
-
-	//gmp_printf("%Zd\n%Zd\n", ret, nm1);
-	
-	/*
-	if (mpz_cmp(ret, nm1) > 0) {
-	}*/
 }
 
 bool LL(int32_t exponent) {
@@ -58,9 +52,10 @@ bool LL(int32_t exponent) {
 	return mpz_cmp_si(LN, 0) == 0;
 }
 
-int main(int argcount, char *argv[])
+int main(int argc, char *argv[])
 {
-	int32_t exponent = 2*2*44497;
+	int32_t exponent = 580673;
+	if (argc > 1) exponent = strtol(argv[1], NULL, 10);
 	bool res;
 	clock_t s, e;
 	s = clock();

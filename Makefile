@@ -5,7 +5,7 @@ LIB = -lm -lgmp
 all: main test
 
 main: $(MAIN_SOURCES)
-	gcc $(MAIN_SOURCES) $(LIB) -o ./stemprime.o
+	gcc $(MAIN_SOURCES) $(LIB) -Ofast -o ./stemprime.o
 
 test: 
 	./stemprime.o 44497
