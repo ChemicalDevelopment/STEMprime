@@ -12,11 +12,12 @@
 
 */
 
+// standard libraries
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdbool.h>
-#include <math.h>
 
+// getting input flags (custom implementation)
 #include "input/input.h"
 
 #include "bstypes.h"
