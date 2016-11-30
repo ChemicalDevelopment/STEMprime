@@ -15,7 +15,6 @@ void _print_single_int(int x, int base) {
 	int res = x, id = 63, _switch = 0;
 	int r[64];
 	while (res > 0) {
-		//printf("%c", BASE_STR[res % base]);
 		r[id--] = res % base;
 		res /= base;
 	}
@@ -30,8 +29,6 @@ void _print_single_int(int x, int base) {
 			_switch = 1;			
 		}
 	}
-	//printf(s);
-
 }
 
 void print_primes_base(bitset_t bs, int max, int base) {

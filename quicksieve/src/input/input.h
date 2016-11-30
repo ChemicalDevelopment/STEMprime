@@ -33,7 +33,7 @@ int get_int_var(char opt[], int dft) {
 
 char * get_str_var(char opt[], char dft[]) {
 	int i;
-	for (i = 1; i < argc; ++i) {
+	for (i = 1; i < argc - 1; ++i) {
 		if (strcmp(argv[i], opt) == 0) {
 			return argv[i+1];
 		}

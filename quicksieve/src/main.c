@@ -44,16 +44,6 @@ int main(int argc, char *argv[]) {
 			printf("%ld primes <= %ld\n", count(set, n), n);
 	}
 
-	//printf("%ld primes <= %ld\n", count(set, max), max);
-/*
-	int i;
-	for (i = 0; i <= max; ++i) {
-		if (getbit(set, i)) {
-			printf("%d, ", i);
-		}
-	}
-	printf("\n");
-*/
 	return 0;
 }
 
