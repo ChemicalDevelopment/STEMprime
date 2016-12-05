@@ -11,3 +11,5 @@
 //void list(long int *list, long int max);
 
 void bitset_erat(bitset_t *list, long int max);
+
+//void bitset_erat_wheel(bitset_t *bs, long int max);

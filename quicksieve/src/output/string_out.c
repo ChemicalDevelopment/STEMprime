@@ -11,7 +11,7 @@ void print_primes(bitset_t bs, int max) {
 	print_primes_base(bs, max, 10);
 }
 
-void _print_single_int(int x, int base) {
+void print_single_int(int x, int base) {
 	int res = x, id = 63, _switch = 0;
 	int r[64];
 	while (res > 0) {
@@ -38,7 +38,7 @@ void print_primes_base(bitset_t bs, int max, int base) {
 	int i;
 	for (i = 0; i <= max; ++i) {
 		if (getbit(bs, i)) {
-			_print_single_int(i, base);
+			print_single_int(i, base);
 			printf(", ");
 		}
 	}

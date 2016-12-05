@@ -7,7 +7,6 @@
 #include <string.h>
 #include <math.h>
 
-
 void __bitset_erat_C(bitset_t list, long int max) {
 	long int i, j;
 	memset(list.data, 0b10101010, SIZE_BS(max));
@@ -28,3 +27,9 @@ void bitset_erat(bitset_t *bs, long int max) {
 	(*bs).data = MALLOC_BS(max);
 	__bitset_erat_C((*bs), max);
 }
+/*
+void bitset_erat_wheel(bitset_t *bs, long int max) {
+	(*bs).data = MALLOC_BS(max);
+	__bitset_erat_W((*bs), max);
+}
+*/
