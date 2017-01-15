@@ -27,9 +27,3 @@ void bitset_erat(bitset_t *bs, long int max) {
 	(*bs).data = MALLOC_BS(max);
 	__bitset_erat_C((*bs), max);
 }
-/*
-void bitset_erat_wheel(bitset_t *bs, long int max) {
-	(*bs).data = MALLOC_BS(max);
-	__bitset_erat_W((*bs), max);
-}
-*/

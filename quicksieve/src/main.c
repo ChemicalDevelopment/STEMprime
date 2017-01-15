@@ -32,26 +32,31 @@
 int main(int argc, char *argv[]) {
 	init_input(argc, argv);
 
-	if (get_flag("-h")) {
+	if (get_flag("-h") || argc < 2) {
 		printf("QuickSieve by ChemicalDevelopment\n");
 		printf("  -print : prints the primes in the sieve\n");
 		printf("  -sieve [n] : sieves up to n\n");
 		printf("  -count : prints the amount of primes less than [-sieve n]\n");
+		printf("  \n");
+		printf("Formatting options\n");
+		printf("  -base [n] : what base to print while using -print \n");
+		printf("  -sep [str] : what to print between primes \n");
+		printf("  -nlz : don't print 0s to fit the max length \n");
 		return 0;
 	}
 
 
-	if (get_flag("-sieve")) {
+	if (get_flag("-sieve") || true) {
 		long int n = get_int_var("-sieve", 1000);
+
 		bitset_t set;
-		//bitset_erat(&set, n);
 		bitset_erat(&set, n);
 		
-		if (get_flag("-count") || !get_flag("-print"))
+		if (get_flag("-count") || !get_flag("-print")) {
 			printf("%ld primes <= %ld\n", count(set, n), n);
-
+		}
 		if (get_flag("-print")) {
-			print_primes_base(set, n, get_int_var("-base", 10));
+			print_primes_base(set, n, get_str_var("-sep", "\n"), get_int_var("-base", 10), get_flag("-nlz"));
 		}
 
 	}
