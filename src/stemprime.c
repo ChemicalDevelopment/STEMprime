@@ -28,34 +28,29 @@ can also find a copy at http://www.gnu.org/licenses/.
 int main(int argc, char *argv[]) {
     cargs_init(PACKAGE_NAME, VERSION, argc, argv);
 
-    // name, email  this is used for --authors
     cargs_add_author("Cade Brown", "cade@chemicaldevelopment.us");
 
-    // add two possible keys (the last can be NULL for no second version)
     cargs_add_arg("", NULL, CARGS_NUM_ANY, CARGS_ARG_TYPE_INT, "exponents");
-    cargs_add_default("-g", "Hello");
+    cargs_add_flag("-t". NULL, "print out times");
 
-    // when the argument is left as "", that means you don't have to add any prefix.
-    // so, if you run `./greet Mars`, the flag "" will have `Mars` in it
-    cargs_add_arg_str("", NULL, "enter your name");
-    cargs_add_default("", "World");
-
-
-    // this parses the arguments
     cargs_parse();
 
-
-    uint32_t exponent = 580673;
-    if (argc > 1) exponent = strtol(argv[1], NULL, 10);
-    bool res;
-    clock_t s, e;
-    s = clock();
-    res = LL_mpz_u32(exponent);
-    e = clock();
-    if (res) {
-        printf("2^%d-1 is prime\n", exponent);
+    size_t i;
+    for (i = 0; i < cargs_get_len(""); ++i) {
+        uint32_t exponent = cargs_get_int(i);
+        bool res;
+        clock_t s, e;
+        s = clock();
+        res = LL_mpz_u32(exponent);
+        e = clock();
+        if (res) {
+            printf("2^%d-1 is prime\n", exponent);
+        }
+        printf("took %lf seconds\n", (double)(e-s)/1000000);
     }
-    printf("took %lf seconds\n", (double)(e-s)/1000000);
+
+
+
     return 0;
 }
 
