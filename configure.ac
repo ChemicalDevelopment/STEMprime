@@ -36,6 +36,34 @@ AC_CHECK_HEADERS([stdlib.h stdio.h stdbool.h string.h math.h])
 
 AC_CHECK_LIB(m, log)
 
+# cargs is required
+
+LIBS="-lcargs $LIBS"
+
+AC_ARG_WITH(
+  cargs, 
+  AS_HELP_STRING([--with-cargs],
+  [Provide cargs directory]), [
+  case "$with_cargs" in
+    yes)
+      withval=/usr/local
+      ;;
+  esac
+
+  LDFLAGS="$LDFLAGS -L$withval/lib"
+  CFLAGS="$CFLAGS -I$withval/include"
+
+  AC_MSG_CHECKING(cargs)
+  AC_MSG_RESULT(yes ($withval))
+], [ ])
+
+
+AC_CHECK_HEADER(cargs.h, [], [
+  AC_MSG_ERROR(cargs header not found (looking for cargs.h))
+])
+
+AC_CHECK_LIB(cargs, cargs_init)
+
 
 # GMP can be supplied to use multiprecision support
 
@@ -61,6 +89,9 @@ AC_ARG_WITH(
 
   AC_DEFINE([USE_GMP], [1], [Use GMP library code])
 ], [ ])
+
+
+
 AH_TEMPLATE(USE_GMP,[GMP support is available])
 
 
