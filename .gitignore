@@ -1,6 +1,7 @@
 src/stemprime
 
-
+*.zip
+*.tar*
 *.o
 .vscode/
 
