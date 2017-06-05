@@ -59,7 +59,7 @@ The binary is `./src/stemprime`
 | Option | Description | Note |
 |:------------- |:------------- |:----- |
 | `--enable-static` | Builds a static executable (for distributing) | Doesn't always work on macOS |
-| `--with-X=XDIR` | Gives info for finding library `X` in `XDIR`, used for nonstd locations (see below in README) | N/A |
+| `--with-X=XDIR` | Gives info for finding library `X` in `XDIR` | See the next section |
 
 
 ## Non Standard Locations
