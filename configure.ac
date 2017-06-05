@@ -118,6 +118,9 @@ AC_ARG_WITH(
 
 AH_TEMPLATE(USE_GMP,[GMP support is available])
 
+AC_DEFINE([MAX_ITI], [60], [Maximum internal time interval (in s)])
+
+
 
 AC_ARG_ENABLE([static], AS_HELP_STRING([--enable-static], [Enable static building]))
 

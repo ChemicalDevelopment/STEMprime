@@ -23,6 +23,11 @@ can also find a copy at http://www.gnu.org/licenses/.
 #include "stemprime.h"
 
 
+unsigned long long mpz_get_ll(mpz_t z) {
+    return (z->_mp_d[0]);
+}
+
+
 void init_test(ll_test_t *test) {
 
     mpz_init2((*test).L_i, 2 * (*test).exp + 1);
@@ -31,6 +36,7 @@ void init_test(ll_test_t *test) {
     mpz_init((*test)._tmp);
 
     (*test)._e2n.exp = (*test).exp;
+    (*test).cur_res = 2;
 
     //  _2expnm1 = 2^exp - 1, so store that many bits
     mpz_init2((*test)._e2n._2expnm1, (*test).exp+1);
@@ -47,12 +53,14 @@ void clear_test(ll_test_t *test) {
 }
 
 void LL_test(ll_test_t *test) {
+    gettimeofday(&(*test).stime, NULL); 
+
     // ith term of LucasLehmer sequence, mod (2^exp-1)
     long exponent = (*test).exp;
 
+    (*test).cur_res = 4;
+    
     init_test(test);
-
-    gettimeofday(&(*test).stime, NULL); 
 
     uint32_t i;
     for (i = 0; i < exponent - 2; i++) {
@@ -64,17 +72,19 @@ void LL_test(ll_test_t *test) {
         mpz_sub_ui((*test).L_i, (*test).L_i, 2);
 
         // % (2^exponent-1)
+        //mpz_mod((*test).L_i, (*test).L_i, (*test)._e2n._2expnm1);
         mpz_mod_2nm1((*test).L_i, (*test).L_i, (*test)._e2n, (*test)._tmp);
+
+        (*test).cur_res = mpz_get_ll((*test).L_i);
     }
-
-    gettimeofday(&(*test).etime, NULL); 
-
 
     (*test).is_finished = true;
     (*test).is_prime = mpz_cmp_si((*test).L_i, 0) == 0;
 
-
     clear_test(test);
+
+    gettimeofday(&(*test).etime, NULL); 
+
 
     print_test_result(*test);
 }

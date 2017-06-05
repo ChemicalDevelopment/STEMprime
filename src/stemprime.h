@@ -43,9 +43,19 @@ can also find a copy at http://www.gnu.org/licenses/.
 
 #include "math_util.h"
 
+
+#define SP_TLMS_SECOND       (1000)
+#define SP_TLMS_MINUTE       (SP_TLMS_SECOND * 60)
+#define SP_TLMS_HOUR         (SP_TLMS_MINUTE * 60)
+#define SP_TLMS_DAY          (SP_TLMS_HOUR * 24)
+#define SP_TLMS_MAXLEN       (1000)
+
+
 ll_test_t get_test(long expo, long worker_id);
 
 void print_test_result(ll_test_t test);
+
+char * get_timelen_str(double ms);
 
 void print_test(ll_test_t test);
 

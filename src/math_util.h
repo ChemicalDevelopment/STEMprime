@@ -40,6 +40,8 @@ typedef struct ll_test_t {
     long exp;
     long id;
 
+    unsigned long long cur_res;
+
     struct timeval stime, etime;
 
     mpz_t L_i, _tmp;
@@ -55,6 +57,7 @@ typedef struct ll_test_t {
 
 
 
+unsigned long long mpz_get_ll(mpz_t z);
 
 void init_exp_2expnm1(exp_2expnm1_t *MOD, long exponent);
 
