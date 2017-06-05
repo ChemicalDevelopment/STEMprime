@@ -77,9 +77,11 @@ int main(int argc, char *argv[]) {
 
     cargs_add_author("Cade Brown", "cade@chemicaldevelopment.us");
 
+    cargs_add_arg("-t", "--time-interval", 1, CARGS_ARG_TYPE_FLOAT, "output interval");
+    cargs_add_default("-t", "3.0");
+
     cargs_add_arg("", NULL, CARGS_NUM_ANY, CARGS_ARG_TYPE_INT, "exponents");
-    cargs_add_arg("-t", NULL, 1, CARGS_ARG_TYPE_INT, "seconds between checks");
-    cargs_add_default("-t", "15");
+
 
     cargs_parse();
 
@@ -93,11 +95,13 @@ int main(int argc, char *argv[]) {
             tests[i] = get_test(cargs_get_int_idx("", i), i);
             pthread_create(&tests_pt[i], NULL, do_process, (void *)&tests[i]);
         }
-        int sleep_s = cargs_get_int("-t");
+        float sleep_s = cargs_get_float("-t");
+        struct timeval sleep_sp, sleep_cp;
+        sleep_sp.tv_sec = (long)floor(sleep_s);
+        sleep_sp.tv_usec = (long)floor((sleep_s - sleep_sp.tv_sec) * 1000000000.0);
         if (sleep_s >= 0) {
             bool all_done = false;
             while (!all_done) {
-                sleep(sleep_s);
                 all_done = true;
                 for (i = 0; i < len; ++i) {
                     if (!tests[i].is_finished) {
@@ -106,6 +110,7 @@ int main(int argc, char *argv[]) {
                     all_done = all_done && tests[i].is_finished;
                 }
                 printf("\n");
+                nanosleep(&sleep_sp, &sleep_cp);
             }
         }
 

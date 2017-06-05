@@ -26,14 +26,14 @@ can also find a copy at http://www.gnu.org/licenses/.
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdint.h>
-#include <sys/time.h>
-#include <time.h>
 #include <stdbool.h>
+
+#include <time.h>
+#include <sys/time.h>
+
 #include <unistd.h>
 
-
 #include <math.h>
-
 
 #include <pthread.h>
 

@@ -30,15 +30,40 @@ AC_CONFIG_HEADERS([config.h])
 AC_PROG_CC
 
 # Checks for header files.
-AC_CHECK_HEADERS([stdlib.h stdio.h stdbool.h string.h math.h])
+AC_CHECK_HEADERS([stdlib.h stdio.h stdbool.h string.h math.h pthread.h sys/time.h time.h unistd.h])
 
 # Checks for libraries.
 
 AC_CHECK_LIB(m, log)
 
-# cargs is required
 
-LIBS="-lcargs -lgmp -lpthread $LIBS"
+# these are all required
+
+LIBS="-lcargs -lgmp -lpthread -lm $LIBS"
+
+AC_ARG_WITH(
+  pthread, 
+  AS_HELP_STRING([--with-pthread],
+  [Use pthread library]), [
+  case "$with_pthread" in
+    yes)
+      withval=/usr/local
+      ;;
+  esac
+
+  LDFLAGS="$LDFLAGS -L$withval/lib"
+  CFLAGS="$CFLAGS -I$withval/include"
+
+  AC_CHECK_HEADER(pthread.h, [], [
+    AC_MSG_ERROR(pthread header not found (looking for pthread.h))
+  ])
+  AC_MSG_CHECKING(pthread)
+  AC_MSG_RESULT(yes ($withval))
+
+  AC_DEFINE([USE_PTHREAD], [1], [Use PTHREAD library code])
+], [ ])
+
+# cargs is required
 
 AC_ARG_WITH(
   cargs, 
@@ -79,7 +104,6 @@ AC_ARG_WITH(
 
   LDFLAGS="$LDFLAGS -L$withval/lib"
   CFLAGS="$CFLAGS -I$withval/include"
-  LIBS="-lgmp $LIBS"
 
   AC_CHECK_HEADER(gmp.h, [], [
     AC_MSG_ERROR(GMP header not found (looking for gmp.h))
