@@ -23,9 +23,10 @@ Run `stemprime N0 N1 N2 N3 ...` to test a series of exponents, in parallel (i.e.
 ## Options
 
 | Option | Takes | Function |
-| `--info` |  | Prints version and name info about the program |
-| `-h, --help` |  | Prints help and usage information |
-| `--authors` |  | Prints authors name and email addresses |
+|:------------- |:------------- |:----- |
+| `--info` | N/A | Prints version and name info about the program |
+| `-h, --help` | N/A | Prints help and usage information |
+| `--authors` | N/A | Prints authors name and email addresses |
 | `-t, --time-interval` | number | Sets the number of seconds to wait for each output |
 | No prefix | list of numbers | Gives the list of numbers to check primality of `2^N-1` for each N |
 
@@ -56,8 +57,9 @@ The binary is `./src/stemprime`
 ## Configure Options
 
 | Option | Description | Note |
+|:------------- |:------------- |:----- |
 | `--enable-static` | Builds a static executable (for distributing) | Doesn't always work on macOS |
-| `--with-X=XDIR` | Gives info for finding library `X` in `XDIR`, used for nonstd locations (see below in README) | |
+| `--with-X=XDIR` | Gives info for finding library `X` in `XDIR`, used for nonstd locations (see below in README) | N/A |
 
 
 ## Non Standard Locations
