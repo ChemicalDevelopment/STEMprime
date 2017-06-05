@@ -38,7 +38,7 @@ AC_CHECK_LIB(m, log)
 
 # cargs is required
 
-LIBS="-lcargs $LIBS"
+LIBS="-lcargs -lgmp -lpthread $LIBS"
 
 AC_ARG_WITH(
   cargs, 

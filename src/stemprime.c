@@ -24,6 +24,53 @@ can also find a copy at http://www.gnu.org/licenses/.
 #include "stemprime.h"
 
 
+ll_test_t get_test(long expo, long worker_id) {
+   ll_test_t res;
+   res.exp = expo;
+   res.id = worker_id;
+
+   res.current_iter = 0;
+
+   res.is_prime = false;
+   res.is_finished = false;
+   res.has_printed = false;
+   return res;
+}
+
+
+void print_test_result(ll_test_t test) {
+    if (!test.is_finished) {
+        printf("ERROR: worker %ld not finished\n", test.id);
+        exit(3);
+    } else {
+
+    printf("[worker %ld]\n", test.id);
+    printf("  exp: %ld\n", test.exp);
+    if (test.is_prime) {
+        printf("  is_prime: true\n");
+    } else {
+        printf("  is_prime: true\n");
+    }
+    printf("  iter: %ld/%ld\n", test.current_iter, test.exp - 3);
+    printf("  time: %.2lf\n", ms_diff(test.etime, test.stime)/1000.0);
+    printf("  ms/iter: %.4lf\n\n", ms_diff(test.etime, test.stime)/test.current_iter);
+    fflush(stdout);
+    }
+
+}
+
+void print_test(ll_test_t test) {
+    if (!test.is_finished) {
+        gettimeofday(&test.etime, NULL);
+    }
+    printf("[worker %ld] exp=%ld, iter=%ld/%ld [%%%2.2lf], ms/iter=%.4lf\n", test.id, test.exp, test.current_iter, test.exp - 3, (100.0*test.current_iter)/(test.exp-3), ms_diff(test.etime, test.stime)/(test.current_iter));
+    fflush(stdout);
+}
+
+void * do_process(void * test_v) {
+    LL_test((ll_test_t *)test_v);
+    return NULL;
+}
 
 int main(int argc, char *argv[]) {
     cargs_init(PACKAGE_NAME, VERSION, argc, argv);
@@ -31,22 +78,47 @@ int main(int argc, char *argv[]) {
     cargs_add_author("Cade Brown", "cade@chemicaldevelopment.us");
 
     cargs_add_arg("", NULL, CARGS_NUM_ANY, CARGS_ARG_TYPE_INT, "exponents");
-    cargs_add_flag("-t". NULL, "print out times");
+    cargs_add_arg("-t", NULL, 1, CARGS_ARG_TYPE_INT, "seconds between checks");
+    cargs_add_default("-t", "15");
 
     cargs_parse();
 
-    size_t i;
-    for (i = 0; i < cargs_get_len(""); ++i) {
-        uint32_t exponent = cargs_get_int(i);
-        bool res;
-        clock_t s, e;
-        s = clock();
-        res = LL_mpz_u32(exponent);
-        e = clock();
-        if (res) {
-            printf("2^%d-1 is prime\n", exponent);
+    if (cargs_get_len("") > 0) {
+        size_t i, len = cargs_get_len("");
+
+        ll_test_t * tests = (ll_test_t *)malloc(sizeof(ll_test_t) * len);
+        pthread_t * tests_pt = (pthread_t *)malloc(sizeof(pthread_t) * len);
+
+        for (i = 0; i < len; ++i) {
+            tests[i] = get_test(cargs_get_int_idx("", i), i);
+            pthread_create(&tests_pt[i], NULL, do_process, (void *)&tests[i]);
         }
-        printf("took %lf seconds\n", (double)(e-s)/1000000);
+        int sleep_s = cargs_get_int("-t");
+        if (sleep_s >= 0) {
+            bool all_done = false;
+            while (!all_done) {
+                sleep(sleep_s);
+                all_done = true;
+                for (i = 0; i < len; ++i) {
+                    if (!tests[i].is_finished) {
+                        print_test(tests[i]);
+                    }
+                    all_done = all_done && tests[i].is_finished;
+                }
+                printf("\n");
+            }
+        }
+
+
+        for (i = 0; i < len; ++i) {
+            pthread_join(tests_pt[i], NULL);
+        }
+
+        printf("ALL TESTS DONE\n--------------------------------------------------------------------------------\n");
+        
+        for (i = 0; i < len; ++i) {
+            print_test_result(tests[i]);
+        }
     }
 
 

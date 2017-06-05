@@ -26,12 +26,30 @@ can also find a copy at http://www.gnu.org/licenses/.
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdint.h>
-#include <gmp.h>
+#include <sys/time.h>
 #include <time.h>
 #include <stdbool.h>
+#include <unistd.h>
+
+
+#include <math.h>
+
+
+#include <pthread.h>
+
+#include <gmp.h>
+
+
 
 #include "math_util.h"
 
+ll_test_t get_test(long expo, long worker_id);
+
+void print_test_result(ll_test_t test);
+
+void print_test(ll_test_t test);
+
+void * do_process(void * test_v);
 
 int main(int argc, char *argv[]);
 

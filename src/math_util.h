@@ -26,8 +26,6 @@ can also find a copy at http://www.gnu.org/licenses/.
 #include "stemprime.h"
 
 
-mpz_t __MATH_UTIL_TMP_MPZ_0, __MATH_UTIL_TMP_MPZ_1;
-
 // structure to contain exponent and 2^(exponent)-1 
 typedef struct exp_2expnm1_t {
 
@@ -37,8 +35,35 @@ typedef struct exp_2expnm1_t {
 } exp_2expnm1_t;
 
 
+
+typedef struct ll_test_t {
+    long exp;
+    long id;
+
+    struct timeval stime, etime;
+
+    mpz_t L_i, _tmp;
+
+    exp_2expnm1_t _e2n;
+
+    long current_iter;
+  
+    bool is_finished;
+    bool has_printed;
+    bool is_prime;
+} ll_test_t;
+
+
+
+
+void init_exp_2expnm1(exp_2expnm1_t *MOD, long exponent);
+
+void clear_exp_2expnm1(exp_2expnm1_t *MOD);
+
+
+
 // LucasLehmer test of 2^exponent - 1
-bool LL_mpz_u32(uint32_t exponent);
+void LL_test(ll_test_t *test);
 
 
 // initializes math libraries
@@ -46,8 +71,11 @@ void init_math_util(uint32_t starting_bits);
 
 
 // computes to = num % (mod._2expnm1), using accelerated methods
-void mpz_mod_2nm1(mpz_t ret, mpz_t num, exp_2expnm1_t mod);
+void mpz_mod_2nm1(mpz_t ret, mpz_t num, exp_2expnm1_t mod, mpz_t tmp);
 
+
+// x - y in ms
+double ms_diff(struct timeval x, struct timeval y);
 
 
 #endif
