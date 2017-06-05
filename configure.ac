@@ -126,7 +126,7 @@ AC_MSG_CHECKING("whether timeval should be used")
 AC_TRY_RUN([
   #include <time.h>
   #include <sys/time.h>
-  int main() { struct timeval x; }
+  int main() { struct timeval x; return 0; }
 ], [
     AC_DEFINE(USE_TIMEVAL, [], [Use timeval struct]) 
     AC_MSG_RESULT("yes")
