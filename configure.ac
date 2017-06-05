@@ -121,6 +121,17 @@ AH_TEMPLATE(USE_GMP,[GMP support is available])
 AC_DEFINE([MAX_ITI], [60], [Maximum internal time interval (in s)])
 
 
+AC_MSG_CHECKING("whether timeval should be used")
+
+AC_TRY_RUN([
+  #include <time.h>
+  #include <sys/time.h>
+  int main() { struct timeval x; }
+], [
+    AC_DEFINE(USE_TIMEVAL, [], [Use timeval struct]) 
+    AC_MSG_RESULT("yes")
+], AC_MSG_RESULT("no") )
+
 
 AC_ARG_ENABLE([static], AS_HELP_STRING([--enable-static], [Enable static building]))
 
