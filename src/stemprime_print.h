@@ -1,4 +1,4 @@
-/* math_util.h -- header for math_util.h, defines math functions
+/* stemprime_print.h -- header for stemprime_print.c
 
   Copyright 2016-2017 ChemicalDevelopment
 
@@ -19,23 +19,15 @@ can also find a copy at http://www.gnu.org/licenses/.
 
 */
 
-
-#ifndef __MATH_UTIL_H__
-#define __MATH_UTIL_H__
+#ifndef __STEMPRIME_PRINT_H__
+#define __STEMPRIME_PRINT_H__
 
 #include "stemprime.h"
 
+void print_res64(ll_res64_t res);
 
-double ms_diff(struct timeval x, struct timeval y);
+void print_test_result(ll_test_t test);
 
-void mpz_get_res64(ll_res64_t *r, mpz_t z);
-
-void init_test(ll_test_t *test);
-
-void clear_test(ll_test_t *test);
-
-void LL_test(ll_test_t *test);
-
+void print_test(ll_test_t test);
 
 #endif
-

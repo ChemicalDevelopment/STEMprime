@@ -35,33 +35,66 @@ can also find a copy at http://www.gnu.org/licenses/.
 
 #include <math.h>
 
-#include <pthread.h>
-
 #include <gmp.h>
+
+#include <cargs.h>
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
 
-#include "math_util.h"
 
+typedef struct ll_test_fmt_t {
+
+    struct timeval stime, etime, lptime, ctim;
+  
+    long iter_print_freq;
+
+} ll_test_fmt_t;
+
+
+
+#if GMP_LIMB_BITS == 64
+typedef struct ll_res64_t {
+  mp_limb_t res;
+} ll_res64_t;
+#elif GMP_LIMB_BITS == 32
+typedef struct ll_res64_t {
+  // value = res0 + 2^32 * res1
+  mp_limb_t res0, res1;
+} ll_res64_t;
+#else
+#error sizeof(long) is SIZEOF_LONG, dont know how to use this
+#endif
+
+
+typedef struct ll_test_t {
+    long exp;
+
+    double _extra_time;
+
+    long cur_iter, max_iter;
+
+    mpz_t L_i, _tmp, _2expnm1;
+
+    bool is_prime;
+  
+    ll_res64_t cur_res;
+    ll_test_fmt_t fmt;
+
+} ll_test_t;
+
+
+#include "math_util.h"
+#include "stemprime_util.h"
+#include "stemprime_print.h"
+#include "progress.h"
 
 #define SP_TLMS_SECOND       (1000)
 #define SP_TLMS_MINUTE       (SP_TLMS_SECOND * 60)
 #define SP_TLMS_HOUR         (SP_TLMS_MINUTE * 60)
 #define SP_TLMS_DAY          (SP_TLMS_HOUR * 24)
 #define SP_TLMS_MAXLEN       (1000)
-
-
-ll_test_t get_test(long expo, long worker_id);
-
-void print_test_result(ll_test_t test);
-
-char * get_timelen_str(double ms);
-
-void print_test(ll_test_t test);
-
-void * do_process(void * test_v);
 
 int main(int argc, char *argv[]);
 

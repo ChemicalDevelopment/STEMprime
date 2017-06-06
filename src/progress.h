@@ -1,4 +1,4 @@
-/* math_util.h -- header for math_util.h, defines math functions
+/* progress.h -- header file for progress.c
 
   Copyright 2016-2017 ChemicalDevelopment
 
@@ -20,21 +20,22 @@ can also find a copy at http://www.gnu.org/licenses/.
 */
 
 
-#ifndef __MATH_UTIL_H__
-#define __MATH_UTIL_H__
+#ifndef __PROGRESS_H__
+#define __PROGRESS_H__
 
 #include "stemprime.h"
 
+// returns the string representation for exponent test
+char * sp_storage_name(long exponent);
 
-double ms_diff(struct timeval x, struct timeval y);
+// returns whether an intermediate result has been stored
+bool sp_test_stored(long exponent);
 
-void mpz_get_res64(ll_res64_t *r, mpz_t z);
+// dumps SP to file
+void sp_dump_test(ll_test_t test);
 
-void init_test(ll_test_t *test);
-
-void clear_test(ll_test_t *test);
-
-void LL_test(ll_test_t *test);
+// loads from exponent
+void sp_load_test(ll_test_t *test, long exponent);
 
 
 #endif

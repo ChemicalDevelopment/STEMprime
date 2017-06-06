@@ -42,73 +42,64 @@ void init_test(ll_test_t *test) {
 
     mpz_init((*test)._tmp);
 
-    (*test)._e2n.exp = (*test).exp;
-
     //  _2expnm1 = 2^exp - 1, so store that many bits
-    mpz_init2((*test)._e2n._2expnm1, (*test).exp+1);
-    mpz_ui_pow_ui((*test)._e2n._2expnm1, 2, (*test).exp);
-    mpz_sub_ui((*test)._e2n._2expnm1, (*test)._e2n._2expnm1, 1); 
+    mpz_init2((*test)._2expnm1, (*test).exp+1);
+    mpz_ui_pow_ui((*test)._2expnm1, 2, (*test).exp);
+    mpz_sub_ui((*test)._2expnm1, (*test)._2expnm1, 1); 
 }
 
 
 void clear_test(ll_test_t *test) {
-    mpz_clear((*test)._e2n._2expnm1);
+    mpz_clear((*test)._2expnm1);
     mpz_clear((*test)._tmp);
     mpz_clear((*test).L_i);
 }
 
 void LL_test(ll_test_t *test) {
     gettimeofday(&(*test).fmt.stime, NULL); 
+    gettimeofday(&(*test).fmt.lptime, NULL); 
 
     // ith term of LucasLehmer sequence, mod (2^exp-1)
     //long exponent = (*test).exp;
 
-    init_test(test);
-
     mpz_get_res64(&(*test).cur_res, (*test).L_i);
 
     uint32_t i;
-    for (i = 1; i <= (*test).max_iter; i++) {
+    for (i = (*test).cur_iter; i <= (*test).max_iter; i++) {
         // sets iteration information
         (*test).cur_iter = i;
+
+        if ((*test).fmt.iter_print_freq != 0 && i % (*test).fmt.iter_print_freq == 0 && i != 0) {
+            mpz_get_res64(&(*test).cur_res, (*test).L_i);
+            print_test(*test);
+            sp_dump_test(*test);
+            gettimeofday(&(*test).fmt.lptime, NULL);     
+        }
 
         // Ln = L(n-1)**2-2
         mpz_mul((*test).L_i, (*test).L_i, (*test).L_i);
         mpz_sub_ui((*test).L_i, (*test).L_i, 2);
 
-        // % (2^exponent-1)
-        //mpz_mod((*test).L_i, (*test).L_i, (*test)._e2n._2expnm1);
-        mpz_mod_2nm1((*test).L_i, (*test).L_i, (*test)._e2n, (*test)._tmp);
 
-        if (i % (*test).fmt.iter_print_freq == 0 && i != 0) {
-            mpz_get_res64(&(*test).cur_res, (*test).L_i);
-            print_test(*test);
+        // % (2^exponent-1)
+        // computes to = num % (mod._2expnm1), using accelerated methods
+        mpz_tdiv_q_2exp((*test)._tmp, (*test).L_i, (*test).exp);
+        mpz_mod_2exp((*test).L_i, (*test).L_i, (*test).exp);
+        mpz_add((*test).L_i, (*test).L_i, (*test)._tmp);
+        if (mpz_cmp((*test).L_i, (*test)._2expnm1) >= 0) {
+            mpz_sub((*test).L_i, (*test).L_i, (*test)._2expnm1);
         }
+
     }
 
     mpz_get_res64(&(*test).cur_res, (*test).L_i);
 
-    (*test).is_finished = true;
     (*test).is_prime = mpz_cmp_si((*test).L_i, 0) == 0;
-
-    clear_test(test);
 
     gettimeofday(&(*test).fmt.etime, NULL); 
 
+    clear_test(test);
 
-    print_test_result(*test);
-}
-
-
-// computes to = num % (mod._2expnm1), using accelerated methods
-void mpz_mod_2nm1(mpz_t ret, mpz_t num, exp_2expnm1_t mod, mpz_t tmp) {
-    mpz_tdiv_q_2exp(tmp, num, mod.exp);
-    mpz_mod_2exp(ret, num, mod.exp);
-    mpz_add(ret, ret, tmp);
-
-    if (mpz_cmp(ret, mod._2expnm1) >= 0) {
-        mpz_sub(ret, ret, mod._2expnm1);
-    }
 }
 
 

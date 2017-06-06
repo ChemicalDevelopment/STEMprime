@@ -30,7 +30,7 @@ AC_CONFIG_HEADERS([config.h])
 AC_PROG_CC
 
 # Checks for header files.
-AC_CHECK_HEADERS([stdlib.h stdio.h stdbool.h string.h math.h pthread.h sys/time.h time.h unistd.h])
+AC_CHECK_HEADERS([stdlib.h stdio.h stdbool.h string.h math.h sys/time.h time.h unistd.h])
 
 # Checks for libraries.
 
@@ -39,29 +39,7 @@ AC_CHECK_LIB(m, log)
 
 # these are all required
 
-LIBS="-lcargs -lgmp -lpthread -lm $LIBS"
-
-AC_ARG_WITH(
-  pthread, 
-  AS_HELP_STRING([--with-pthread],
-  [Use pthread library]), [
-  case "$with_pthread" in
-    yes)
-      withval=/usr/local
-      ;;
-  esac
-
-  LDFLAGS="$LDFLAGS -L$withval/lib"
-  CFLAGS="$CFLAGS -I$withval/include"
-
-  AC_CHECK_HEADER(pthread.h, [], [
-    AC_MSG_ERROR(pthread header not found (looking for pthread.h))
-  ])
-  AC_MSG_CHECKING(pthread)
-  AC_MSG_RESULT(yes ($withval))
-
-  AC_DEFINE([USE_PTHREAD], [1], [Use PTHREAD library code])
-], [ ])
+LIBS="-lcargs -lgmp -lm $LIBS"
 
 # cargs is required
 
@@ -141,6 +119,7 @@ AS_IF([test "x$enable_static" = "xyes"], [
 ])
 
 
+AC_DEFINE(MAX_STRLEN_LONG, [60], [Max length for a long]) 
 
 # Checks for library functions.
 AC_FUNC_MALLOC
