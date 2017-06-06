@@ -39,6 +39,7 @@ typedef struct exp_2expnm1_t {
 typedef struct ll_test_t {
     long exp;
     long id;
+    long printout_each;
 
     unsigned long long cur_res;
 

@@ -30,6 +30,7 @@ ll_test_t get_test(long expo, long worker_id) {
    res.id = worker_id;
 
    res.current_iter = 0;
+   res.printout_each = cargs_get_int("-t");
 
    res.is_prime = false;
    res.is_finished = false;
@@ -118,11 +119,11 @@ int main(int argc, char *argv[]) {
 
     cargs_add_author("Cade Brown", "cade@chemicaldevelopment.us");
 
-    cargs_add_arg("-t", "--time-interval", 1, CARGS_ARG_TYPE_FLOAT, "output interval");
-    cargs_add_default("-t", "3.0");
+    cargs_add_arg("-t", NULL, 1, CARGS_ARG_TYPE_INT, "");
+    cargs_add_default("-t", "1000");
     
-    cargs_add_arg("-it", "--internal-time-interval", 1, CARGS_ARG_TYPE_FLOAT, "output interval");
-    cargs_add_default("-it", "3.0");
+    cargs_add_arg("-it", "--internal-time-interval", 1, CARGS_ARG_TYPE_INT, "checking interval");
+    cargs_add_default("-it", "0");
     
 
     cargs_add_arg("", NULL, CARGS_NUM_ANY, CARGS_ARG_TYPE_INT, "exponents");
@@ -136,64 +137,21 @@ int main(int argc, char *argv[]) {
         ll_test_t * tests = (ll_test_t *)malloc(sizeof(ll_test_t) * len);
         pthread_t * tests_pt = (pthread_t *)malloc(sizeof(pthread_t) * len);
 
-
         for (i = 0; i < len; ++i) {
             tests[i] = get_test(cargs_get_int_idx("", i), i);
             pthread_create(&tests_pt[i], NULL, do_process, (void *)&tests[i]);
         }
-
-        float sleep_s = cargs_get_float("-t");
-        float isleep_s = cargs_get_float("-it");
-
-        isleep_s *= floor(isleep_s / sleep_s);
-
-        if (isleep_s > sleep_s) {
-            isleep_s = sleep_s;
-        }
-
-        if (isleep_s > MAX_ITI) {
-            isleep_s = MAX_ITI;
-        }
-
-        struct timeval lprint, ctim;
-        gettimeofday(&lprint, NULL);
-
-        #ifdef USE_TIMEVAL
-        struct timeval isleep_sp, isleep_cp;
-        isleep_sp.tv_sec = (long)floor(isleep_s);
-        isleep_sp.tv_usec = (long)floor((isleep_s - isleep_sp.tv_sec) * 1000000000.0);
-        #else
-        struct timespec isleep_sp, isleep_cp;
-        isleep_sp.tv_sec = (long)floor(isleep_s);
-        isleep_sp.tv_nsec = (long)floor((isleep_s - isleep_sp.tv_sec) * 1000000000.0);
-        #endif
+        int sleep_s = cargs_get_int("-it");
         if (sleep_s >= 0) {
             bool all_done = false;
-            bool has_printed = false;
-            bool do_print = true; 
             while (!all_done) {
                 all_done = true;
-                gettimeofday(&ctim, NULL);
-                if (!has_printed || ms_diff(ctim, lprint) >= sleep_s * 1000.0) {
-                    do_print = true;
-                    gettimeofday(&lprint, NULL);        
-                } else {
-                    do_print = false;
-                }
                 for (i = 0; i < len; ++i) {
-                    if (do_print && !tests[i].is_finished) {
-                        print_test(tests[i]);
-                    }
                     all_done = all_done && tests[i].is_finished;
                 }
-                if (do_print) {
-                    printf("\n");
-                }
-                nanosleep(&isleep_sp, &isleep_cp);
-                has_printed = true;
+                sleep(sleep_s);
             }
         }
-
 
         for (i = 0; i < len; ++i) {
             pthread_join(tests_pt[i], NULL);

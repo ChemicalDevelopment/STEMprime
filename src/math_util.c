@@ -76,6 +76,10 @@ void LL_test(ll_test_t *test) {
         mpz_mod_2nm1((*test).L_i, (*test).L_i, (*test)._e2n, (*test)._tmp);
 
         (*test).cur_res = mpz_get_ll((*test).L_i);
+
+        if (i % (*test).printout_each == 0 && i != 0) {
+            print_test(*test);
+        }
     }
 
     (*test).is_finished = true;
