@@ -27,36 +27,48 @@ can also find a copy at http://www.gnu.org/licenses/.
 ll_test_t get_test(long expo, long worker_id) {
    ll_test_t res;
    res.exp = expo;
-   res.id = worker_id;
+   res.wid = worker_id;
 
-   res.current_iter = 0;
-   res.printout_each = cargs_get_int("-t");
+   res.cur_iter = 1;
+   res.max_iter = expo - 2;
+   res.fmt.iter_print_freq = cargs_get_int("-t");
 
    res.is_prime = false;
    res.is_finished = false;
-   res.has_printed = false;
+
    return res;
 }
 
+void print_res64(ll_res64_t res) {
+    #if GMP_LIMB_BITS == 64
+    gmp_printf("0x%016MX", res.res);
+    #elif GMP_LIMB_BITS == 32
+    gmp_printf("0x%08MuX%08MX", res.res1, res.res0);
+    #else
+    #error sizeof(long) is SIZEOF_LONG, dont know how to use this
+    #endif
+}
 
 void print_test_result(ll_test_t test) {
     if (!test.is_finished) {
-        printf("ERROR: worker %ld not finished\n", test.id);
+        printf("ERROR: worker %ld not finished\n", test.wid);
         exit(3);
     } else {
 
-    printf("[worker %ld]\n", test.id);
+    printf("[worker %ld]\n", test.wid);
     printf("  exp: %ld\n", test.exp);
     if (test.is_prime) {
         printf("  is_prime: true\n");
     } else {
         printf("  is_prime: false\n");
     }
-    char * res = get_timelen_str(ms_diff(test.etime, test.stime));
-    printf("  iter: %ld/%ld\n", test.current_iter, test.exp - 3);
+    char * res = get_timelen_str(ms_diff(test.fmt.etime, test.fmt.stime));
+    printf("  iter: %ld/%ld\n", test.cur_iter, test.max_iter);
     printf("  time: %s\n", res);
-    printf("  residual: 0x%016llX\n", test.cur_res);
-    printf("  ms/iter: %.4lf\n\n", ms_diff(test.etime, test.stime)/test.current_iter);
+    printf("  residual: ");
+    print_res64(test.cur_res);
+    printf("\n");
+    printf("  ms/iter: %.4lf\n\n", ms_diff(test.fmt.etime, test.fmt.stime)/test.cur_iter);
     free(res);
     fflush(stdout);
     }
@@ -95,16 +107,14 @@ char * get_timelen_str(double dms) {
 
 void print_test(ll_test_t test) {
     if (!test.is_finished) {
-        gettimeofday(&test.etime, NULL);
+        gettimeofday(&test.fmt.etime, NULL);
     }
-    double elapsed_time_ms = ms_diff(test.etime, test.stime);
-    if (test.current_iter == 0) {
-        gettimeofday(&test.stime, NULL); 
-        test.current_iter = 1;
-    }
-    double portion_done = (1.0*test.current_iter)/(test.exp-3);
+    double elapsed_time_ms = ms_diff(test.fmt.etime, test.fmt.stime);
+    double portion_done = (1.0*test.cur_iter)/(test.max_iter);
     char * time_left_str = get_timelen_str(elapsed_time_ms * (1 - portion_done) / portion_done);
-    printf("[worker %ld] exp=%ld, iter=%ld/%ld [%%%2.2lf], ms/iter=%.4lf, [%s left] [res 0x%016llX]\n", test.id, test.exp, test.current_iter, test.exp - 3, 100*portion_done, elapsed_time_ms / test.current_iter, time_left_str, test.cur_res);
+    printf("[worker %ld] exp=%ld, iter=%ld/%ld [%%%2.2lf], ms/iter=%.4lf, [%s left] [res ", test.wid, test.exp, test.cur_iter, test.exp - 3, 100*portion_done, elapsed_time_ms / test.cur_iter, time_left_str);
+    print_res64(test.cur_res);
+    printf("]\n");
     free(time_left_str);
     fflush(stdout);
 }

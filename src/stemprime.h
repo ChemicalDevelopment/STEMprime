@@ -39,7 +39,9 @@ can also find a copy at http://www.gnu.org/licenses/.
 
 #include <gmp.h>
 
-
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
 
 #include "math_util.h"
 

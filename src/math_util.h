@@ -35,30 +35,49 @@ typedef struct exp_2expnm1_t {
 } exp_2expnm1_t;
 
 
+typedef struct ll_test_fmt_t {
+
+    struct timeval stime, etime;
+  
+    long iter_print_freq;
+
+
+} ll_test_fmt_t;
+
+
+#if GMP_LIMB_BITS == 64
+typedef struct ll_res64_t {
+  mp_limb_t res;
+} ll_res64_t;
+#elif GMP_LIMB_BITS == 32
+typedef struct ll_res64_t {
+  // value = res0 + 2^32 * res1
+  mp_limb_t res0, res1;
+} ll_res64_t;
+#else
+#error sizeof(long) is SIZEOF_LONG, dont know how to use this
+#endif
+
 
 typedef struct ll_test_t {
     long exp;
-    long id;
-    long printout_each;
+    long wid;
 
-    unsigned long long cur_res;
-
-    struct timeval stime, etime;
+    long cur_iter, max_iter;
 
     mpz_t L_i, _tmp;
 
     exp_2expnm1_t _e2n;
 
-    long current_iter;
-  
     bool is_finished;
-    bool has_printed;
     bool is_prime;
+  
+    ll_res64_t cur_res, last_res;
+    ll_test_fmt_t fmt;
+
 } ll_test_t;
 
 
-
-unsigned long long mpz_get_ll(mpz_t z);
 
 void init_exp_2expnm1(exp_2expnm1_t *MOD, long exponent);
 
