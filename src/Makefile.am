@@ -27,5 +27,5 @@ AM_LDFLAGS =
 bin_PROGRAMS = stemprime
 
 
-stemprime_SOURCES = stemprime.h stemprime_util.h stemprime_print.h math_util.h progress.h stemprime.c stemprime_util.c stemprime_print.c math_util.c progress.c
+stemprime_SOURCES = stemprime.h stemprime_util.h stemprime_print.h math_util.h prime_util.h progress.h stemprime.c stemprime_util.c prime_util.c stemprime_print.c math_util.c progress.c
 stemprime_LDADD =

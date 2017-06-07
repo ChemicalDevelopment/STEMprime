@@ -99,6 +99,7 @@ typedef struct ll_test_t {
 
 
 #include "math_util.h"
+#include "prime_util.h"
 #include "stemprime_util.h"
 #include "stemprime_print.h"
 #include "progress.h"

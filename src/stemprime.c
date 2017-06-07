@@ -34,9 +34,13 @@ int main(int argc, char *argv[]) {
     cargs_add_arg("-d", "--directory", 1, CARGS_ARG_TYPE_STR, "storage directory for intermediate results");
     cargs_add_default("-d", ".");
     
+    cargs_add_flag("-sieve", NULL, "print a sieve");
 
-    cargs_add_flag("-mpn", NULL, "Use MPN numbers");
+    cargs_add_flag("-mpn", NULL, "use MPN functions");
     cargs_add_flag("-nc", NULL, "do not use checkpoint files, creating or loading");
+
+    cargs_add_flag("-tdiv", NULL, "test divide number");
+    cargs_add_flag("-ns", NULL, "no sieve");
 
     cargs_add_arg("-t", NULL, 1, CARGS_ARG_TYPE_INT, "print out every N trials");
     cargs_add_default("-t", "10000");
@@ -51,7 +55,39 @@ int main(int argc, char *argv[]) {
         print_extended_info();
     }
 
-    if (cargs_get_flag("")) {
+    if (cargs_get_flag("-sieve")) {
+        long max = cargs_get_int("");
+        sp_bs_t bits;
+
+        init_bs(&bits, max);
+        bs_erat(&bits);
+
+        printf("primes < %ld is %ld\n", max, bs_count(&bits));
+        bs_clear(&bits);
+
+    } else if (cargs_get_flag("-tdiv")) {
+        long num = cargs_get_int("");
+        if (cargs_get_flag("-ns")) {
+            if (testdiv_nobs(num)) {
+                printf("%d is prime\n", num);
+            } else {
+                printf("%d is not prime\n", num);
+            }
+        } else {
+            sp_bs_t bits;
+            init_bs(&bits, 2+(long)sqrt(num));
+            bs_erat(&bits);
+
+            if (testdiv(num, bits)) {
+                printf("%d is prime\n", num);
+            } else {
+                printf("%d is not prime\n", num);
+            }
+
+            bs_clear(&bits);
+        }
+
+    } else if (cargs_get_flag("")) {
 
         long exponent = cargs_get_int("");
         ll_test_t test = get_test(exponent);
