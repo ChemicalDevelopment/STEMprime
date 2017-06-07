@@ -43,10 +43,10 @@ void sp_dump_test(ll_test_t test) {
     double _t_extra_time = test._extra_time + ms_diff(test.fmt.ctim, test.fmt.stime);
     char * tofile = sp_storage_name(test.exp);
     FILE * fp = fopen(tofile, "w+");
-
-    fprintf(fp, "%ld,%ld,%lf\n", test.exp, test.cur_iter, _t_extra_time);
-    mpz_out_raw(fp, test.L_i);
-    mpz_out_raw(fp, test._2expnm1);
+    int _b_um = test._use_mpn;
+    fprintf(fp, "%d,%ld,%ld,%lf\n", _b_um, test.exp, test.cur_iter, _t_extra_time);
+    mpz_out_raw(fp, test._mpz.L_i);
+    mpz_out_raw(fp, test._mpz._2expnm1);
     
     fclose(fp);
     free(tofile);
@@ -57,9 +57,14 @@ void sp_load_test(ll_test_t *test, long exponent) {
     FILE * fp = fopen(tofile, "r");
     double _t_extra_time = 0;
 
-    int fsf_res = fscanf(fp, "%ld,%ld,%lf\n", &test->exp, &test->cur_iter, &_t_extra_time);
+    init_test(test);
 
-    if (fsf_res != 3) {
+    int _b_um;
+    int fsf_res = fscanf(fp, "%d,%ld,%ld,%lf\n", &_b_um, &test->exp, &test->cur_iter, &_t_extra_time);
+
+    test->_use_mpn = _b_um;
+
+    if (fsf_res != 4) {
         fclose(fp);
         int status = remove(tofile);
         if (status == 0) {
@@ -69,8 +74,10 @@ void sp_load_test(ll_test_t *test, long exponent) {
         }
     }
 
-    mpz_inp_raw(test->L_i, fp);
-    mpz_inp_raw(test->_2expnm1, fp);
+
+
+    mpz_inp_raw(test->_mpz.L_i, fp);
+    mpz_inp_raw(test->_mpz._2expnm1, fp);
 
     (*test)._extra_time += _t_extra_time;
 

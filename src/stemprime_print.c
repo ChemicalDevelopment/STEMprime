@@ -71,6 +71,7 @@ void print_test_result(ll_test_t test) {
 }
 
 void print_test(ll_test_t test) {
+    
     gettimeofday(&test.fmt.ctim, NULL);
     double elapsed_time_ms = ms_diff(test.fmt.ctim, test.fmt.stime) + test._extra_time;
     double portion_done = (1.0*test.cur_iter)/(test.max_iter);

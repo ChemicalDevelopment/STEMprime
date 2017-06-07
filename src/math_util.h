@@ -28,6 +28,8 @@ can also find a copy at http://www.gnu.org/licenses/.
 
 double ms_diff(struct timeval x, struct timeval y);
 
+void mpn_get_res64(ll_res64_t *r, mp_limb_t *z);
+
 void mpz_get_res64(ll_res64_t *r, mpz_t z);
 
 void init_test(ll_test_t *test);
@@ -35,6 +37,10 @@ void init_test(ll_test_t *test);
 void clear_test(ll_test_t *test);
 
 void LL_test(ll_test_t *test);
+
+void LL_stest_mpn(ll_test_t *test);
+
+void LL_stest_mpz(ll_test_t *test);
 
 
 #endif

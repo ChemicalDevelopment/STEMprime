@@ -35,7 +35,8 @@ int main(int argc, char *argv[]) {
     cargs_add_default("-d", ".");
     
 
-    cargs_add_flag("-nc", "--no-checkpoint", "do not use checkpoint files, creating or loading");
+    cargs_add_flag("-mpn", NULL, "Use MPN numbers");
+    cargs_add_flag("-nc", NULL, "do not use checkpoint files, creating or loading");
 
     cargs_add_arg("-t", NULL, 1, CARGS_ARG_TYPE_INT, "print out every N trials");
     cargs_add_default("-t", "10000");
@@ -54,17 +55,19 @@ int main(int argc, char *argv[]) {
 
         long exponent = cargs_get_int("");
         ll_test_t test = get_test(exponent);
-        init_test(&test);
 
-        if (!cargs_get_flag("-nc") && sp_test_stored(exponent)) {
+        test._use_mpn = cargs_get_flag("-mpn");
+
+        if (!cargs_get_flag("-mpn") && !cargs_get_flag("-nc") && sp_test_stored(exponent)) {
             sp_load_test(&test, exponent);
+        } else {
+            init_test(&test);
         }
+
         LL_test(&test);
         
         print_test_result(test);
     }
-
-
 
     return 0;
 }

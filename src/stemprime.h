@@ -67,6 +67,15 @@ typedef struct ll_res64_t {
 #error GMP_LIMB_BITS is neither 32 or 64 bit
 #endif
 
+typedef struct ll_test_mpz_t {
+    mpz_t L_i, _tmp, _2expnm1;
+} ll_test_mpz_t;
+
+typedef struct ll_test_mpn_t {
+    long xl, e2xl;
+    mp_limb_t *L_i, *_tmp, *_2expnm1;
+} ll_test_mpn_t;
+
 
 typedef struct ll_test_t {
     long exp;
@@ -74,8 +83,12 @@ typedef struct ll_test_t {
     double _extra_time;
 
     long start_iter, cur_iter, max_iter;
+    
+    // if true, use _mpn, else use _mpz
+    bool _use_mpn;
 
-    mpz_t L_i, _tmp, _2expnm1;
+    ll_test_mpn_t _mpn;
+    ll_test_mpz_t _mpz;
 
     bool is_prime;
   
