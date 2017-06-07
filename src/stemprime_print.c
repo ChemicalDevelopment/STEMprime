@@ -21,14 +21,34 @@ can also find a copy at http://www.gnu.org/licenses/.
 
 #include "stemprime.h"
 
+
+void sp_error(char * msg) {
+    printf("\n!!\nerror: %s\n!!\n", msg);
+    exit(3);
+}
+
+void sp_warn(char * msg) {
+    if (cargs_get_int("-v") >= 1) {
+        printf("\n!\nwarn: %s\n!\n", msg);
+    }
+}
+
+// extended from typical info from cargs, as it is not supported yet.
+void print_extended_info() {
+    printf(PACKAGE " extended info\n");
+    printf("  compiliation date: " __TIMESTAMP__ "\n");
+    printf("  GMP limb bits: %u\n", GMP_LIMB_BITS);
+
+    printf("\n");
+}
+
+
 void print_res64(ll_res64_t res) {
-    #if GMP_LIMB_BITS == 64
+#if GMP_LIMB_BITS == 64
     gmp_printf("0x%016MX", res.res);
-    #elif GMP_LIMB_BITS == 32
+#elif GMP_LIMB_BITS == 32
     gmp_printf("0x%08MuX%08MX", res.res1, res.res0);
-    #else
-    #error sizeof(long) is SIZEOF_LONG, dont know how to use this
-    #endif
+#endif
 }
 
 void print_test_result(ll_test_t test) {
@@ -38,20 +58,21 @@ void print_test_result(ll_test_t test) {
     } else {
         printf("  is_prime: false\n");
     }
-    char * res = get_timelen_str(ms_diff(test.fmt.etime, test.fmt.stime));
+    double t_elapsed_ms = ms_diff(test.fmt.etime, test.fmt.stime) + test._extra_time;
+    char * res = get_timelen_str(t_elapsed_ms);
     printf("  iter: %ld/%ld\n", test.cur_iter, test.max_iter);
     printf("  time: %s\n", res);
     printf("  residual: ");
     print_res64(test.cur_res);
     printf("\n");
-    printf("  ms/iter: %.4lf\n\n", ms_diff(test.fmt.etime, test.fmt.stime)/test.cur_iter);
+    printf("  ms/iter: %.4lf\n\n", t_elapsed_ms/test.cur_iter);
     free(res);
     fflush(stdout);
 }
 
 void print_test(ll_test_t test) {
     gettimeofday(&test.fmt.ctim, NULL);
-    double elapsed_time_ms = ms_diff(test.fmt.ctim, test.fmt.stime);
+    double elapsed_time_ms = ms_diff(test.fmt.ctim, test.fmt.stime) + test._extra_time;
     double portion_done = (1.0*test.cur_iter)/(test.max_iter);
     char * time_left_str = get_timelen_str(get_time_left(test));
     

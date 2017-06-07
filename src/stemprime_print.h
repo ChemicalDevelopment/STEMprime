@@ -24,6 +24,12 @@ can also find a copy at http://www.gnu.org/licenses/.
 
 #include "stemprime.h"
 
+void sp_error(char * msg);
+
+void sp_warn(char * msg);
+
+void print_extended_info();
+
 void print_res64(ll_res64_t res);
 
 void print_test_result(ll_test_t test);

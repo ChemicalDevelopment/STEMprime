@@ -28,12 +28,17 @@ int main(int argc, char *argv[]) {
 
     cargs_add_author("Cade Brown", "cade@chemicaldevelopment.us");
 
+    cargs_add_arg("-v", NULL, 1, CARGS_ARG_TYPE_INT, "verbosity level");
+    cargs_add_default("-v", "2");
+
     cargs_add_arg("-d", "--directory", 1, CARGS_ARG_TYPE_STR, "storage directory for intermediate results");
     cargs_add_default("-d", ".");
     
 
+    cargs_add_flag("-nc", "--no-checkpoint", "do not use checkpoint files, creating or loading");
+
     cargs_add_arg("-t", NULL, 1, CARGS_ARG_TYPE_INT, "print out every N trials");
-    cargs_add_default("-t", "1000");
+    cargs_add_default("-t", "10000");
     
 
     cargs_add_arg("", NULL, 1, CARGS_ARG_TYPE_INT, "exponent");
@@ -41,16 +46,19 @@ int main(int argc, char *argv[]) {
 
     cargs_parse();
 
+    if (cargs_get_int("-v") >= 3) {
+        print_extended_info();
+    }
+
     if (cargs_get_flag("")) {
 
         long exponent = cargs_get_int("");
         ll_test_t test = get_test(exponent);
         init_test(&test);
 
-        if (sp_test_stored(exponent)) {
+        if (!cargs_get_flag("-nc") && sp_test_stored(exponent)) {
             sp_load_test(&test, exponent);
         }
-        printf("%d;\n", test.cur_iter);
         LL_test(&test);
         
         print_test_result(test);

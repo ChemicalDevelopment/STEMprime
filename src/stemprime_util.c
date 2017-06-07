@@ -27,7 +27,9 @@ ll_test_t get_test(long expo) {
 
    res._extra_time = 0;
 
+   res.start_iter = 1;
    res.cur_iter = 1;
+
    res.max_iter = expo - 2;
    res.fmt.iter_print_freq = cargs_get_int("-t");
 
@@ -43,13 +45,13 @@ double get_time_left(ll_test_t test) {
     char * time_left_str = get_timelen_str(elapsed_time_ms * (1 - portion_done) / portion_done);*/
 
     // more advanced
-    double elapsed_time_ms = ms_diff(test.fmt.ctim, test.fmt.stime);
+    double elapsed_time_ms = ms_diff(test.fmt.ctim, test.fmt.stime) + test._extra_time;
     double elapsed_time_freq_ms = ms_diff(test.fmt.ctim, test.fmt.lptime);
     double portion_done = (1.0*test.cur_iter)/(test.max_iter);
     double freq_portion = (1.0*test.fmt.iter_print_freq)/(test.max_iter);
     double f0 = elapsed_time_ms * (1 - portion_done) / portion_done;
     double f1 = elapsed_time_freq_ms * (1 - portion_done) / freq_portion;
-    double time_left = .4 * f0 + .6 * f1;
+    double time_left = .8 * f0 + .2 * f1;
     return time_left;
 
 }
@@ -67,7 +69,7 @@ char * get_timelen_str(double dms) {
     seconds = ((double)ms) / SP_TLMS_SECOND;
     bool printall = false;
     char * res = (char *)malloc(SP_TLMS_MAXLEN);
-    sprintf(res, "");
+    sprintf(res, "%c", 0);
     if (days > 0 || printall) {
         sprintf(res, "%ld%s", days, "d");
         printall = true;

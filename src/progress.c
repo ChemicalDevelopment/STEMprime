@@ -43,8 +43,10 @@ void sp_dump_test(ll_test_t test) {
     double _t_extra_time = test._extra_time + ms_diff(test.fmt.ctim, test.fmt.stime);
     char * tofile = sp_storage_name(test.exp);
     FILE * fp = fopen(tofile, "w+");
-    gmp_fprintf(fp, "%ld,%ld,%lf\n%Zd\n%Zd\n", test.exp, test.cur_iter, _t_extra_time, test.L_i, test._2expnm1);
-    //gmp_fprintf(fp, "%Zd\n", test.L_i);
+
+    fprintf(fp, "%ld,%ld,%lf\n", test.exp, test.cur_iter, _t_extra_time);
+    mpz_out_raw(fp, test.L_i);
+    mpz_out_raw(fp, test._2expnm1);
     
     fclose(fp);
     free(tofile);
@@ -53,21 +55,26 @@ void sp_dump_test(ll_test_t test) {
 void sp_load_test(ll_test_t *test, long exponent) {
     char * tofile = sp_storage_name((*test).exp);
     FILE * fp = fopen(tofile, "r");
-    fseek(fp, 0, SEEK_END);
-    long fsize = ftell(fp);
-    fseek(fp, 0, SEEK_SET); 
-    char *contents = (char *)malloc(fsize + 1);
-    fread(contents, fsize, 1, fp);
-    fclose(fp);
-    contents[fsize] = 0;
-
     double _t_extra_time = 0;
 
-    gmp_sscanf(contents, "%ld,%ld,%lf\n%Zd\n%Zd\n", &test->exp, &(*test).cur_iter, &_t_extra_time, &test->L_i, &test->_2expnm1);
+    int fsf_res = fscanf(fp, "%ld,%ld,%lf\n", &test->exp, &test->cur_iter, &_t_extra_time);
 
+    if (fsf_res != 3) {
+        fclose(fp);
+        int status = remove(tofile);
+        if (status == 0) {
+            sp_error("sp_load_test: Progress file was corrupt, and was deleted\n");
+        } else {
+            sp_error("sp_load_test: Progress file was corrupt, but couldn't be deleted\n");
+        }
+    }
+
+    mpz_inp_raw(test->L_i, fp);
+    mpz_inp_raw(test->_2expnm1, fp);
 
     (*test)._extra_time += _t_extra_time;
-    free(contents);
+
+    fclose(fp);
     free(tofile);
 }
 

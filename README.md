@@ -27,8 +27,11 @@ Run `stemprime N0 N1 N2 N3 ...` to test a series of exponents, in parallel (i.e.
 | `--info` | N/A | Prints version and name info about the program |
 | `-h, --help` | N/A | Prints help and usage information |
 | `--authors` | N/A | Prints authors name and email addresses |
-| `-t, --time-interval` | number | Sets the number of seconds to wait for each output |
-| No prefix | list of numbers | Gives the list of numbers to check primality of `2^N-1` for each N |
+| `-v=2` | number | Sets verbosity level (3 prints all, 0 is only neccesary info) |
+| `-d=./` | string | Where to store and restore from progress files |
+| `-nc, --no-checkpoint` | N/A | If enabled, no checkpoint files are used |
+| `-t, --time-interval=10000` | number | Prints each `t` iterations |
+| ` ` | number | The exponent to perform LL test on M `n` |
 
 
 # Building

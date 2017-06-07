@@ -64,7 +64,7 @@ typedef struct ll_res64_t {
   mp_limb_t res0, res1;
 } ll_res64_t;
 #else
-#error sizeof(long) is SIZEOF_LONG, dont know how to use this
+#error GMP_LIMB_BITS is neither 32 or 64 bit
 #endif
 
 
@@ -73,7 +73,7 @@ typedef struct ll_test_t {
 
     double _extra_time;
 
-    long cur_iter, max_iter;
+    long start_iter, cur_iter, max_iter;
 
     mpz_t L_i, _tmp, _2expnm1;
 
@@ -94,6 +94,7 @@ typedef struct ll_test_t {
 #define SP_TLMS_MINUTE       (SP_TLMS_SECOND * 60)
 #define SP_TLMS_HOUR         (SP_TLMS_MINUTE * 60)
 #define SP_TLMS_DAY          (SP_TLMS_HOUR * 24)
+
 #define SP_TLMS_MAXLEN       (1000)
 
 int main(int argc, char *argv[]);
