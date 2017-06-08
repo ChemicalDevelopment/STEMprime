@@ -21,9 +21,21 @@ can also find a copy at http://www.gnu.org/licenses/.
 
 #include "stemprime.h"
 
+#ifdef USE_MPI
+#include <mpi.h>
+
+int ierr, rank, num_procs;
+
+#endif
 
 
 int main(int argc, char *argv[]) {
+    #ifdef USE_MPI
+    ierr = MPI_Init(&argc, &argv);
+    ierr = MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+    ierr = MPI_Comm_size(MPI_COMM_WORLD, &num_procs);
+    #endif
+
     cargs_init(PACKAGE_NAME, VERSION, argc, argv);
 
     cargs_add_author("Cade Brown", "cade@chemicaldevelopment.us");
@@ -46,7 +58,7 @@ int main(int argc, char *argv[]) {
     cargs_add_default("-t", "10000");
     
 
-    cargs_add_arg("", NULL, 1, CARGS_ARG_TYPE_INT, "exponent");
+    cargs_add_arg("", NULL, CARGS_NUM_ANY, CARGS_ARG_TYPE_INT, "exponent");
 
 
     cargs_parse();
@@ -87,23 +99,55 @@ int main(int argc, char *argv[]) {
             bs_clear(&bits);
         }
 
-    } else if (cargs_get_flag("")) {
-
-        long exponent = cargs_get_int("");
-        ll_test_t test = get_test(exponent);
-
-        test._use_mpn = cargs_get_flag("-mpn");
-
-        if (!cargs_get_flag("-mpn") && !cargs_get_flag("-nc") && sp_test_stored(exponent)) {
-            sp_load_test(&test, exponent);
-        } else {
-            init_test(&test);
+    } else {
+        #ifdef USE_MPI
+        // how many exponents to do.
+        size_t my_num_todo = (cargs_get_len("") + (cargs_get_len("") % num_procs)) / num_procs;
+        if (rank == num_procs - 1) {
+            my_num_todo -= cargs_get_len("") % num_procs;
         }
+        size_t my_offset = rank * (cargs_get_len("") / num_procs);
+        size_t i;
+        for (i = my_offset; i < cargs_get_len("") && i < my_num_todo; ++i) {
+            long exponent = cargs_get_int_idx("", i);
+            ll_test_t test = get_test(exponent);
 
-        LL_test(&test);
-        
-        print_test_result(test);
+            test._use_mpn = cargs_get_flag("-mpn");
+
+            if (!cargs_get_flag("-mpn") && !cargs_get_flag("-nc") && sp_test_stored(exponent)) {
+                sp_load_test(&test, exponent);
+            } else {
+                init_test(&test);
+            }
+
+            LL_test(&test);
+            
+            print_test_result(test);
+        }
+        #else
+        size_t i;
+        for (i = 0; i < cargs_get_len(""); ++i) {
+            long exponent = cargs_get_int("");
+            ll_test_t test = get_test(exponent);
+
+            test._use_mpn = cargs_get_flag("-mpn");
+
+            if (!cargs_get_flag("-mpn") && !cargs_get_flag("-nc") && sp_test_stored(exponent)) {
+                sp_load_test(&test, exponent);
+            } else {
+                init_test(&test);
+            }
+
+            LL_test(&test);
+            
+            print_test_result(test);
+        }
+        #endif
     }
+
+    #ifdef USE_MPI
+    ierr = MPI_Finalize();
+    #endif
 
     return 0;
 }

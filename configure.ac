@@ -20,7 +20,7 @@
 
 
 AC_PREREQ([2.55])
-AC_INIT([STEMprime], [0.0.1], [group@chemicaldevelopment.us])
+AC_INIT([STEMprime], [0.1.0], [group@chemicaldevelopment.us])
 AM_INIT_AUTOMAKE()
 
 AC_CONFIG_SRCDIR([src/stemprime.h])
@@ -40,6 +40,32 @@ AC_CHECK_LIB(m, log)
 # these are all required
 
 LIBS="-lcargs -lgmp -lm $LIBS"
+
+
+# mpi for titan supercomputer
+
+AC_ARG_WITH(
+  mpi, 
+  AS_HELP_STRING([--with-mpi],
+  [Provide cargs directory]), [
+  case "$with_mpi" in
+    yes)
+      withval=/usr/local
+      ;;
+  esac
+
+  LDFLAGS="$LDFLAGS -L$withval/lib"
+  CFLAGS="$CFLAGS -I$withval/include"
+
+  AC_DEFINE([USE_MPI], [], [Use MPI])
+  AC_MSG_CHECKING(mpi)
+  AC_MSG_RESULT(yes ($withval))
+], [ ])
+
+
+AC_CHECK_HEADER(cargs.h, [], [
+  AC_MSG_ERROR(cargs header not found (looking for cargs.h))
+])
 
 # cargs is required
 
