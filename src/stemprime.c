@@ -108,7 +108,7 @@ int main(int argc, char *argv[]) {
         }
         size_t my_offset = rank * (cargs_get_len("") / num_procs);
         size_t i;
-        for (i = my_offset; i < cargs_get_len("") && i < my_num_todo; ++i) {
+        for (i = my_offset; i < cargs_get_len("") && i < my_offset + my_num_todo; ++i) {
             long exponent = cargs_get_int_idx("", i);
             ll_test_t test = get_test(exponent);
 
