@@ -63,9 +63,6 @@ AC_ARG_WITH(
 ], [ ])
 
 
-AC_CHECK_HEADER(cargs.h, [], [
-  AC_MSG_ERROR(cargs header not found (looking for cargs.h))
-])
 
 # cargs is required
 
